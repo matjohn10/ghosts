@@ -1,0 +1,6 @@
+{"name": "One", "lat": 43.666599, "long": -79.392469, "personality": "creepy", "location": "building", "encounters": 36}
+{"name": "Two", "lat": 43.664643, "long": -79.392554, "personality": "friendly", "location": "house", "encounters": 1}
+{"name": "Three", "lat": 43.675694, "long": -79.376631, "personality": "sad", "location": "park", "encounters": 2}
+{"name": "Four", "lat": 43.641417, "long": -79.388940, "personality": "fun", "location": "outside", "encounters": 90}
+{"name": "Five", "lat": 43.643840, "long": -79.372903, "personality": "violent", "location": "building", "encounters": 1}
+{"name": "Six", "lat": 43.231196, "long": -79.887274, "personality": "agressive", "location": "building", "encounters": 4}
