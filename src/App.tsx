@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import { Button } from "./components/ui/button";
 
 function App() {
@@ -19,9 +20,11 @@ function App() {
           </span>
         </p>
 
-        <Button variant="default" className="hover:cursor-pointer">
-          Report a Sighting
-        </Button>
+        <Link to="/map">
+          <Button variant="default" className="hover:cursor-pointer">
+            Report a Sighting
+          </Button>
+        </Link>
       </div>
     </main>
   );
