@@ -8,10 +8,13 @@ import { useCallback, useState } from "react";
 import icon from "@/assets/vite.svg";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { useMapForm } from "../providers/map-provider";
+import CustomMarker from "./CustomMarker";
 
 const center = { lat: 43.675694, lng: -79.376631 };
 
 function MapObject() {
+  const { form } = useMapForm();
   const ghosts = useQuery(api.ghosts.get) ?? [];
 
   const { isLoaded, loadError } = useJsApiLoader({
@@ -31,10 +34,6 @@ function MapObject() {
   const onUnmount = useCallback(function callback(map: google.maps.Map) {
     setMap(null);
   }, []);
-
-  const customMarkerIcon = {
-    url: icon, // Vite provides the public URL here!
-  };
 
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading Map...</div>;
@@ -67,30 +66,23 @@ function MapObject() {
         onLoad={onLoad}
         onUnmount={onUnmount}
         zoom={1}
+        onDblClick={(e) => {
+          if (!form) return;
+          form.setValue("latitude", e.latLng?.lat() ?? 0);
+          form.setValue("longitude", e.latLng?.lng() ?? 0);
+        }}
         options={{
           styles: mapStyles,
           mapTypeControl: false,
           streetViewControl: false,
           fullscreenControl: false,
+          disableDoubleClickZoom: true,
         }}
       >
         <>
-          {/* <MarkerF position={center} icon={customMarkerIcon} /> */}
           {ghosts.map((g) => (
-            <OverlayViewF
-              position={{ lat: g.lat, lng: g.long }}
-              mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-              key={g._id}
-            >
-              <div className="w-4 h-4 bg-blue-500" />
-            </OverlayViewF>
+            <CustomMarker key={g._id} ghost={g} />
           ))}
-          <OverlayViewF
-            position={center}
-            mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-          >
-            <div className="w-4 h-4 bg-blue-500" />
-          </OverlayViewF>
         </>
       </GoogleMap>
     </div>

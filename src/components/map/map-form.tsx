@@ -34,6 +34,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Input } from "../ui/input";
+import { useMapForm } from "../providers/map-provider";
 
 // Sample data for comboboxes
 const personalityTypes = [
@@ -62,46 +63,9 @@ const presenceTypes = [
   { label: "Electrical Interference", value: "electrical" },
 ];
 
-// Form schema
-const formSchema = z.object({
-  personality: z.string({
-    required_error: "Please select a personality type.",
-  }),
-  location: z.string({
-    required_error: "Please select a location.",
-  }),
-  latitude: z.coerce.number({
-    required_error: "Please enter latitude.",
-  }),
-  longitude: z.coerce.number({
-    required_error: "Please enter longitude.",
-  }),
-  name: z.string({
-    required_error: "Please enter a name for the ghost.",
-  }),
-  presence: z.string({
-    required_error: "Please select a presence type.",
-  }),
-});
-
 function MapForm() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      personality: "",
-      location: "",
-      latitude: undefined,
-      longitude: undefined,
-      name: "",
-      presence: "",
-    },
-  });
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    // Here you would typically send the data to your backend
-    alert("Ghost sighting submitted!");
-  }
+  const { form, onSubmit } = useMapForm();
+  if (!form) return <div>No form error</div>;
   return (
     <Card>
       <CardHeader>
@@ -345,9 +309,10 @@ function MapForm() {
                       }}
                     />
                   </FormControl>
-                  <FormDescription>
+                  <FormDescription>Double click on the map.</FormDescription>
+                  {/* <FormDescription>
                     Decimal degrees (e.g. 40.7128)
-                  </FormDescription>
+                  </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
@@ -375,9 +340,7 @@ function MapForm() {
                       }}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Decimal degrees (e.g. -74.0060)
-                  </FormDescription>
+                  <FormDescription>Double click on the map.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
