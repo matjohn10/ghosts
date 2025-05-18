@@ -20,9 +20,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -290,7 +287,7 @@ function MapForm() {
             {/* Latitude */}
             <FormField
               control={form.control}
-              name="latitude"
+              name="lat"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Latitude</FormLabel>
@@ -302,10 +299,7 @@ function MapForm() {
                       placeholder="Enter latitude (e.g. -40.7128)"
                       value={field.value || ""}
                       onChange={(e) => {
-                        form.setValue(
-                          "latitude",
-                          Number.parseFloat(e.target.value)
-                        );
+                        form.setValue("lat", Number.parseFloat(e.target.value));
                       }}
                     />
                   </FormControl>
@@ -321,7 +315,7 @@ function MapForm() {
             {/* Longitude */}
             <FormField
               control={form.control}
-              name="longitude"
+              name="long"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Longitude</FormLabel>
@@ -334,7 +328,7 @@ function MapForm() {
                       value={field.value || ""}
                       onChange={(e) => {
                         form.setValue(
-                          "longitude",
+                          "long",
                           Number.parseFloat(e.target.value)
                         );
                       }}

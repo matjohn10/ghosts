@@ -1,4 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { api } from "../../../convex/_generated/api";
+import type { InsertGhost } from "../../../convex/ghosts";
+import { useMutation } from "convex/react";
 import { createContext, useContext, type PropsWithChildren } from "react";
 import { useForm, type UseFormReturn } from "react-hook-form";
 import { z } from "zod";
@@ -11,10 +14,10 @@ const formSchema = z.object({
   location: z.string({
     required_error: "Please select a location.",
   }),
-  latitude: z.coerce.number({
+  lat: z.coerce.number({
     required_error: "Please enter latitude.",
   }),
-  longitude: z.coerce.number({
+  long: z.coerce.number({
     required_error: "Please enter longitude.",
   }),
   name: z.string({
@@ -36,22 +39,34 @@ const formContext = createContext<FormContext>({
 });
 
 function MapFormProvider({ children }: PropsWithChildren) {
+  const addGhost = useMutation(api.ghosts.createGhost);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       personality: "",
       location: "",
-      latitude: undefined,
-      longitude: undefined,
+      lat: undefined,
+      long: undefined,
       name: "",
       presence: "",
     },
   });
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const res = await addGhost({
+      form: { ...values, encounters: 1 } as InsertGhost,
+    });
+    if (!res) {
+      alert("Error Saving! Try again.");
+      return;
+    }
     // Here you would typically send the data to your backend
+    form.reset();
+    form.resetField("lat");
+    form.resetField("long");
     alert("Ghost sighting submitted!");
   }
+
   return (
     <formContext.Provider value={{ form, onSubmit }}>
       {children}

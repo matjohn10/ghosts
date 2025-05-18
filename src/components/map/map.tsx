@@ -68,8 +68,8 @@ function MapObject() {
         zoom={1}
         onDblClick={(e) => {
           if (!form) return;
-          form.setValue("latitude", e.latLng?.lat() ?? 0);
-          form.setValue("longitude", e.latLng?.lng() ?? 0);
+          form.setValue("lat", e.latLng?.lat() ?? 0);
+          form.setValue("long", e.latLng?.lng() ?? 0);
         }}
         options={{
           styles: mapStyles,

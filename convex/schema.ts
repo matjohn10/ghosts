@@ -9,5 +9,6 @@ export default defineSchema({
     personality: v.string(),
     location: v.string(), // house, building, outside, park, etc
     encounters: v.number(),
+    presence: v.optional(v.string()),
   }), // todo: add presence: felt, subtle, manfestation, etc
 });
