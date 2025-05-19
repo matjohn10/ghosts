@@ -35,7 +35,11 @@ function CustomMarker({ ghost }: { ghost: Doc<"ghosts"> }) {
     >
       <Dialog>
         <DialogTrigger asChild>
-          <div className="w-4 h-4 bg-primary" onClick={() => setOpened(true)} />
+          <div onClick={() => setOpened(true)}>
+            <div className="flex w-8 h-8 bg-primary rounded-full p-2 items-center justify-center">
+              <TbGhost2 className="w-6 h-6  text-white" />
+            </div>
+          </div>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <div className="w-full flex justify-center">

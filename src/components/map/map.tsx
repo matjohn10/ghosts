@@ -4,12 +4,15 @@ import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useMapForm } from "../providers/map-provider";
 import CustomMarker from "./CustomMarker";
+import { useTheme } from "../providers/theme-provider";
+import { darkMapStyles, mapStyles } from "@/assets/map-styles";
 
 const center = { lat: 43.675694, lng: -79.376631 };
 const mapZoom = 11;
 
 function MapObject() {
   const { form } = useMapForm();
+  const { theme } = useTheme();
   const ghosts = useQuery(api.ghosts.get) ?? [];
 
   const { isLoaded, loadError } = useJsApiLoader({
@@ -54,28 +57,8 @@ function MapObject() {
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading Map...</div>;
 
-  const mapStyles = [
-    {
-      featureType: "poi",
-      elementType: "labels",
-      stylers: [{ visibility: "off" }],
-    },
-    {
-      featureType: "transit",
-      elementType: "labels",
-      stylers: [{ visibility: "off" }],
-    },
-    {
-      featureType: "poi", // Target Points of Interest
-      elementType: "geometry", // Target the actual icons/shapes
-      stylers: [
-        { visibility: "off" }, // Turn off visibility
-      ],
-    },
-  ];
-
   return (
-    <div className="w-full h-full rounded-xl flex items-center justify-center overflow-hidden">
+    <div className="w-full h-full rounded-xl  overflow-hidden ">
       <GoogleMap
         mapContainerStyle={{ width: "100%", height: "100%" }}
         center={pos}
@@ -88,7 +71,7 @@ function MapObject() {
           form.setValue("long", e.latLng?.lng() ?? 0);
         }}
         options={{
-          styles: mapStyles,
+          styles: theme === "light" ? mapStyles : darkMapStyles,
           mapTypeControl: false,
           streetViewControl: false,
           fullscreenControl: false,

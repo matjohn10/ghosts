@@ -8,6 +8,7 @@ import { api } from "../../../convex/_generated/api";
 import { useNavigate } from "react-router";
 import { useState } from "react";
 import Spin from "../spinner";
+import { ModeToggle } from "../mode-toggle";
 
 function MapScreen() {
   const isAuth = useQuery(api.auth.isAuthenticated);
@@ -18,13 +19,14 @@ function MapScreen() {
     <MapFormProvider>
       <div className="flex min-h-screen flex-col md:flex-row">
         {/* Map Section */}
-        <div className="w-full md:w-1/2 lg:w-2/3 min-h-[50vh] p-4 md:p-8 md:min-h-screen flex items-center justify-center text-white">
+        <div className="w-full md:w-1/2 lg:w-2/3 h-[70vh] p-4 md:p-8 md:min-h-screen flex items-center justify-center text-white">
           <MapObject />
         </div>
 
         {/* Form Section */}
-        <div className="flex-col w-full md:w-1/2 lg:w-1/3 p-4 md:p-8 overflow-y-auto space-y-4">
-          <div className="w-full flex justify-end">
+        <div className="flex-col w-full md:w-1/2 lg:w-1/3  md:min-h-screen p-4 md:p-8 overflow-y-auto space-y-4">
+          <div className="w-full hidden md:flex justify-end gap-6">
+            <ModeToggle />
             {isAuth ? (
               <Button
                 onClick={async () => {
