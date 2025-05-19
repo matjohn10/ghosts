@@ -32,35 +32,58 @@ import {
 } from "@/components/ui/command";
 import { Input } from "../ui/input";
 import { useMapForm } from "../providers/map-provider";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 // Sample data for comboboxes
 const personalityTypes = [
-  { label: "Friendly", value: "friendly" },
-  { label: "Mischievous", value: "mischievous" },
-  { label: "Vengeful", value: "vengeful" },
-  { label: "Protective", value: "protective" },
-  { label: "Shy", value: "shy" },
+  { label: "Friendly", value: "Friendly" },
+  { label: "Mischievous", value: "Mischievous" },
+  { label: "Vengeful", value: "Vengeful" },
+  { label: "Protective", value: "Protective" },
+  { label: "Shy", value: "Shy" },
+  { label: "Curious", value: "Curious" },
+  { label: "Playful", value: "Playful" },
+  { label: "Sad", value: "Sad" },
+  { label: "Angry", value: "Angry" },
+  { label: "Confused", value: "Confused" },
+  { label: "Benevolent", value: "Benevolent" },
+  { label: "Territorial", value: "Territorial" },
 ];
 
 const locations = [
-  { label: "Old Mansion", value: "old_mansion" },
-  { label: "Abandoned Hospital", value: "abandoned_hospital" },
-  { label: "Cemetery", value: "cemetery" },
-  { label: "Forest", value: "forest" },
-  { label: "School", value: "school" },
-  { label: "Library", value: "library" },
+  { label: "Old Mansion", value: "Old Mansion" },
+  { label: "Abandoned Hospital", value: "Abandoned Hospital" },
+  { label: "Cemetery", value: "Cemetery" },
+  { label: "Forest", value: "Forest" },
+  { label: "School", value: "School" },
+  { label: "Library", value: "Library" },
+  { label: "Lighthouse", value: "Lighthouse" },
+  { label: "Abandoned Mine", value: "Abandoned Mine" },
+  { label: "Old Prison", value: "Old Prison" },
+  { label: "Antique Shop", value: "Antique Shop" },
+  { label: "Bridge", value: "Bridge" },
+  { label: "Farmhouse", value: "Farmhouse" },
+  { label: "Theatre", value: "Theatre" },
 ];
 
 const presenceTypes = [
-  { label: "Visual Apparition", value: "visual" },
-  { label: "Sound/Voices", value: "sound" },
-  { label: "Temperature Drop", value: "temperature" },
-  { label: "Moving Objects", value: "moving_objects" },
-  { label: "Strange Smells", value: "smells" },
-  { label: "Electrical Interference", value: "electrical" },
+  { label: "Visual Apparition", value: "Visual Apparition" },
+  { label: "Sound/Voices", value: "Sound/Voices" },
+  { label: "Temperature Drop", value: "Temperature Drop" },
+  { label: "Moving Objects", value: "Moving Objects" },
+  { label: "Strange Smells", value: "Strange Smells" },
+  { label: "Electrical Interference", value: "Electrical Interference" },
+  { label: "Physical Touch", value: "Physical Touch" },
+  { label: "Shadow Figure", value: "Shadow Figure" },
+  { label: "Energy Drain", value: "Energy Drain" },
+  { label: "Disembodied Laughter", value: "Disembodied Laughter" },
+  { label: "Cold Spots", value: "Cold Spots" },
+  { label: "Growling", value: "Growling" },
 ];
 
 function MapForm() {
+  const isAuth = useQuery(api.auth.isAuthenticated);
   const { form, onSubmit } = useMapForm();
   if (!form) return <div>No form error</div>;
   return (
@@ -340,9 +363,15 @@ function MapForm() {
               )}
             />
 
-            <Button type="submit" className="w-full">
-              Submit Ghost Sighting
-            </Button>
+            {isAuth ? (
+              <Button type="submit" className="w-full">
+                Submit Ghost Sighting
+              </Button>
+            ) : (
+              <Button type="submit" className="w-full">
+                Sign In to Submit
+              </Button>
+            )}
           </form>
         </Form>
       </CardContent>

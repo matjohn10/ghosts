@@ -1,10 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "../../../convex/_generated/api";
 import type { InsertGhost } from "../../../convex/ghosts";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { createContext, useContext, type PropsWithChildren } from "react";
 import { useForm, type UseFormReturn } from "react-hook-form";
 import { z } from "zod";
+import { useNavigate } from "react-router";
 
 // Form schema
 const formSchema = z.object({
@@ -39,7 +40,9 @@ const formContext = createContext<FormContext>({
 });
 
 function MapFormProvider({ children }: PropsWithChildren) {
+  const isAuth = useQuery(api.auth.isAuthenticated);
   const addGhost = useMutation(api.ghosts.createGhost);
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -53,8 +56,12 @@ function MapFormProvider({ children }: PropsWithChildren) {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!isAuth) {
+      navigate("/auth");
+      return;
+    }
     const res = await addGhost({
-      form: { ...values, encounters: 1 } as InsertGhost,
+      form: values as InsertGhost,
     });
     if (!res) {
       alert("Error Saving! Try again.");

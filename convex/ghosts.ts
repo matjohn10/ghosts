@@ -1,3 +1,4 @@
+import { getAuthUserId } from "@convex-dev/auth/server";
 import { Doc } from "./_generated/dataModel";
 import { query } from "./_generated/server";
 import { mutation } from "./_generated/server";
@@ -13,7 +14,10 @@ export const get = query({
 
 export const createGhost = mutation({
   handler: async (ctx, args: { form: InsertGhost }) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) return;
     const ghostId = await ctx.db.insert("ghosts", args.form);
+    await ctx.db.insert("encounters", { user: userId, ghost: ghostId });
     return ghostId;
   },
 });

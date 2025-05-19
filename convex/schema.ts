@@ -10,7 +10,12 @@ export default defineSchema({
     long: v.float64(),
     personality: v.string(),
     location: v.string(), // house, building, outside, park, etc
-    encounters: v.number(),
     presence: v.optional(v.string()), // felt, subtle, manfestation,
   }),
+  encounters: defineTable({
+    user: v.id("users"),
+    ghost: v.id("ghosts"),
+  })
+    .index("user", ["user"])
+    .index("ghost", ["ghost"]),
 });

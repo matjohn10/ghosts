@@ -33,7 +33,7 @@ function MapObject() {
       "Latitude: " + position.coords.latitude,
       "Longitude: " + position.coords.longitude
     );
-    setPos({ lat: position.coords.latitude, lng: position.coords.latitude });
+    setPos({ lat: position.coords.latitude, lng: position.coords.longitude });
   }
 
   function error() {
