@@ -8,27 +8,44 @@ import { useTheme } from "../providers/theme-provider";
 import { darkMapStyles, mapStyles } from "@/assets/map-styles";
 
 const center = { lat: 43.675694, lng: -79.376631 };
+const dlat = 0.192952121988057;
+const dlng = 0.308990478515625;
+const initBounds = {
+  lat1: center.lat - dlat,
+  lat2: center.lat + dlat,
+  long1: center.lng - dlng,
+  long2: center.lng + dlng,
+};
 const mapZoom = 11;
 
 function MapObject() {
   const { form } = useMapForm();
   const { theme } = useTheme();
-  const ghosts = useQuery(api.ghosts.get) ?? [];
+  const [pos, setPos] = useState(center);
+  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [bound, setBound] = useState(initBounds);
+  //const ghosts = useQuery(api.ghosts.get) ?? [];
+  const ghosts = useQuery(api.ghosts.getClose, bound) ?? [];
 
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAP_API as string,
   });
-  const [pos, setPos] = useState(center);
-  //const [map, setMap] = useState<google.maps.Map | null>(null);
 
   const onLoad = useCallback(function callback(mapp: google.maps.Map) {
     mapp.setZoom(mapZoom);
-    //setMap(mapp);
+    const bounds = mapp.getBounds();
+    if (bounds) {
+      const b2 = bounds.getNorthEast().toJSON();
+      const b1 = bounds.getSouthWest().toJSON();
+      setBound({ lat1: b1.lat, lat2: b2.lat, long1: b1.lng, long2: b2.lng });
+    }
+
+    setMap(mapp);
   }, []);
 
-  const onUnmount = useCallback(function callback(map: google.maps.Map) {
-    //setMap(null);
+  const onUnmount = useCallback(function callback() {
+    setMap(null);
   }, []);
 
   function success(position: GeolocationPosition) {
@@ -54,6 +71,16 @@ function MapObject() {
     }
   }, []);
 
+  const handleBounds = () => {
+    const bounds = map?.getBounds();
+    if (bounds) {
+      const b2 = bounds.getNorthEast().toJSON();
+      const b1 = bounds.getSouthWest().toJSON();
+      //const c = bounds.getCenter().toJSON();
+      setBound({ lat1: b1.lat, lat2: b2.lat, long1: b1.lng, long2: b2.lng });
+    }
+  };
+
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading Map...</div>;
 
@@ -65,6 +92,8 @@ function MapObject() {
         onLoad={onLoad}
         onUnmount={onUnmount}
         zoom={mapZoom}
+        onZoomChanged={handleBounds}
+        onDragEnd={handleBounds}
         onDblClick={(e) => {
           if (!form) return;
           form.setValue("lat", e.latLng?.lat() ?? 0);
