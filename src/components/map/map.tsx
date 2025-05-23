@@ -49,10 +49,6 @@ function MapObject() {
   }, []);
 
   function success(position: GeolocationPosition) {
-    console.log(
-      "Latitude: " + position.coords.latitude,
-      "Longitude: " + position.coords.longitude
-    );
     setPos({ lat: position.coords.latitude, lng: position.coords.longitude });
   }
 
@@ -85,15 +81,18 @@ function MapObject() {
   if (!isLoaded) return <div>Loading Map...</div>;
 
   return (
-    <div className="w-full h-full rounded-xl  overflow-hidden ">
+    <div className="w-full h-full rounded-xl  overflow-hidden relative">
       <GoogleMap
-        mapContainerStyle={{ width: "100%", height: "100%" }}
+        mapContainerStyle={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          alignItems: "flex-end",
+        }}
         center={pos}
         onLoad={onLoad}
         onUnmount={onUnmount}
         zoom={mapZoom}
-        onZoomChanged={handleBounds}
-        onDragEnd={handleBounds}
         onDblClick={(e) => {
           if (!form) return;
           form.setValue("lat", e.latLng?.lat() ?? 0);
@@ -113,6 +112,12 @@ function MapObject() {
           ))}
         </>
       </GoogleMap>
+      <button
+        className="absolute w-auto px-8 py-2 bottom-10 right-24 z-10 bg-white rounded-4xl"
+        onClick={handleBounds}
+      >
+        <p className="text-black">Search this location</p>
+      </button>
     </div>
   );
 }
