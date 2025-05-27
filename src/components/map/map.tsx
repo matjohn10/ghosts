@@ -26,6 +26,9 @@ function MapObject() {
   const [bound, setBound] = useState(initBounds);
   //const ghosts = useQuery(api.ghosts.get) ?? [];
   const ghosts = useQuery(api.ghosts.getClose, bound) ?? [];
+  const [visited, setVisited] = useState(
+    localStorage.getItem("visit") === "true"
+  );
 
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
@@ -65,6 +68,13 @@ function MapObject() {
     } else {
       console.log("Geolocation is not supported by this browser.");
     }
+
+    if (!visited)
+      alert(
+        "Please be truthful. It is made to help people that are interested in paranormal activities."
+      );
+
+    localStorage.setItem("visit", "true");
   }, []);
 
   const handleBounds = () => {
@@ -113,10 +123,10 @@ function MapObject() {
         </>
       </GoogleMap>
       <button
-        className="absolute w-auto px-8 py-2 bottom-10 right-24 z-10 bg-white rounded-4xl"
+        className="absolute w-auto px-4 py-1 bottom-8 right-24 z-10 bg-white rounded-4xl shadow-sm shadow-primary/50 hover:bg-white/90 hover:cursor-pointer active:bg-primary/70"
         onClick={handleBounds}
       >
-        <p className="text-black">Search this location</p>
+        <p className="text-black/65 text-sm">Search this location</p>
       </button>
     </div>
   );
